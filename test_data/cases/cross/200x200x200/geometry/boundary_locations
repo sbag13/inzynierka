@@ -1,0 +1,14 @@
+# vim: set ft=sh:
+# WARNING - all comments except in the first line must start with separated '#'
+
+{
+	node_type      = velocity
+	velocity       = (0.0001, 0.0, 0.0)	
+	pressure       = 0.0
+	file					 = x0.csv
+	file					 = x200.csv
+	file					 = y0.csv
+	file					 = y200.csv
+	file					 = z0.csv
+	file					 = z200.csv
+}

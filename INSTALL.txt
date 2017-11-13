@@ -1,0 +1,267 @@
+											Microflow Installation Guide
+															18 May 2016
+
+
+
+CONTENTS OF THIS FILE
+---------------------
+
+* Requirements
+* Overview
+* Quick start
+* Installation
+* More information
+
+															
+
+REQUIREMENTS
+------------
+
+Microflow requires:
+
+- 64-bit (x64) processor
+- NVIDIA GPU with at least Compute Capability 2.0
+- 64-bit Linux system
+- CUDA 7.5 (https://developer.nvidia.com/cuda-toolkit)
+- VTK 5.8 (http://www.vtk.org/) 
+	with libpng (http://www.libpng.org/pub/png/libpng.html)
+- Cmake (https://cmake.org/)
+- Ruby programming language (https://www.ruby-lang.org/)
+- Ctags (http://ctags.sourceforge.net/)
+- Boost library (http://www.boost.org/)
+
+
+
+OVERVIEW
+--------
+
+Microflow is a high performance Lattice-Boltzmann simulation engine optimised
+for NVIDIA CUDA.
+It is a free, open source software available under GNU General Public License
+(http://www.gnu.org/licenses/gpl.html).
+
+
+
+QUICK START
+-----------
+
+Download and unpack microflow source code.
+
+cd microflow-0.1
+make -s -j 6
+
+
+After successful compilation two program files are present in build/release
+directory: microflow and stl2vtk.
+
+The first file (microflow) is a complete Lattice-Boltzmann simulator, the
+second file (stl2vtk) builds three-dimensional uniform lattice from .stl files.
+Such 3D lattices may be used to prepare simulation case for microflow.
+
+Both programs may be put in any directory, no additional libraries are needed
+(exept the ones used for compilation).
+
+
+
+INSTALLATION
+------------
+
+
+A. Installation on Ubuntu 14.04.4 LTS x86-64.
+
+
+This document describes steps required to install microflow 0.1 on fresh installation of Ubuntu 14.04.4 LTS x86_64.
+
+
+
+A.1. Install CUDA 7.5
+
+
+Microflow requires compiler with C++11 support. It was NOT tested on earlier
+CUDA versions. Also, please use at least gcc-4.7 version.
+
+CUDA installers are available at https://developer.nvidia.com/cuda-downloads.
+There are three CUDA installers available: runfile (local), deb (local), 
+deb (network). Below we describe the installation procedure from deb (local)
+package. Installation from deb package automatically resolves any package
+dependencies.
+
+
+Download deb (local) installer:
+http://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda-repo-ubuntu1404-7-5-local_7.5-18_amd64.deb
+
+Install according to CUDA installation instructions available on download page:
+
+
+sudo dpkg -i cuda-repo-ubuntu1404-7-5-local_7.5-18_amd64.deb
+sudo apt-get update
+sudo apt-get install cuda
+
+WARNING - you must also update your PATH and LD_LIBRARY_PATH.
+For bash users add the following lines to your ~/.bashrc file"
+
+export PATH=$PATH:/usr/local/cuda/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+ 
+
+CUDA installation makes the following changes to the system:
+
+The following NEW packages will be installed:
+  bbswitch-dkms build-essential ca-certificates-java cuda cuda-7-5
+  cuda-command-line-tools-7-5 cuda-core-7-5 cuda-cublas-7-5
+  cuda-cublas-dev-7-5 cuda-cudart-7-5 cuda-cudart-dev-7-5 cuda-cufft-7-5
+  cuda-cufft-dev-7-5 cuda-curand-7-5 cuda-curand-dev-7-5 cuda-cusolver-7-5
+  cuda-cusolver-dev-7-5 cuda-cusparse-7-5 cuda-cusparse-dev-7-5
+  cuda-documentation-7-5 cuda-driver-dev-7-5 cuda-drivers cuda-license-7-5
+  cuda-misc-headers-7-5 cuda-npp-7-5 cuda-npp-dev-7-5 cuda-nvrtc-7-5
+  cuda-nvrtc-dev-7-5 cuda-runtime-7-5 cuda-samples-7-5 cuda-toolkit-7-5
+  cuda-visual-tools-7-5 default-jre default-jre-headless dkms dpkg-dev
+  fakeroot fonts-dejavu-extra freeglut3 freeglut3-dev g++ g++-4.8 java-common
+  lib32gcc1 libalgorithm-diff-perl libalgorithm-diff-xs-perl
+  libalgorithm-merge-perl libatk-wrapper-java libatk-wrapper-java-jni
+  libbonobo2-0 libbonobo2-common libc6-i386 libcuda1-352 libdrm-dev
+  libfakeroot libgconf2-4 libgif4 libgl1-mesa-dev libglu1-mesa-dev libgnome2-0
+  libgnome2-bin libgnome2-common libgnomevfs2-0 libgnomevfs2-common libice-dev
+  libidl-common libidl0 libjansson4 liborbit-2-0 liborbit2
+  libpthread-stubs0-dev libsctp1 libsm-dev libstdc++-4.8-dev libvdpau1
+  libx11-dev libx11-doc libx11-xcb-dev libxau-dev libxcb-dri2-0-dev
+  libxcb-dri3-dev libxcb-glx0-dev libxcb-present-dev libxcb-randr0-dev
+  libxcb-render0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev
+  libxcb1-dev libxdamage-dev libxdmcp-dev libxext-dev libxfixes-dev libxi-dev
+  libxmu-dev libxmu-headers libxnvctrl0 libxshmfence-dev libxt-dev
+  libxxf86vm-dev lksctp-tools mesa-common-dev nvidia-352 nvidia-352-dev
+  nvidia-352-uvm nvidia-modprobe nvidia-opencl-icd-352 nvidia-prime
+  nvidia-settings ocl-icd-libopencl1 openjdk-7-jre openjdk-7-jre-headless
+  screen-resolution-extra tzdata-java x11proto-core-dev x11proto-damage-dev
+  x11proto-dri2-dev x11proto-fixes-dev x11proto-gl-dev x11proto-input-dev
+  x11proto-kb-dev x11proto-xext-dev x11proto-xf86vidmode-dev
+  xorg-sgml-doctools xtrans-dev
+The following packages will be upgraded:
+  cpp-4.8 gcc-4.8 gcc-4.8-base libasan0 libatomic1 libdpkg-perl libgcc-4.8-dev
+  libgomp1 libitm1 libquadmath0 libstdc++6 libtsan0 tzdata
+
+
+
+A.2 VTK 5.x
+
+
+VTK 5.8 is available from Ubuntu repository. Please remember to install
+the correct version (5 instead of 6):
+
+
+sudo apt-get install libvtk5-dev
+
+
+As a part of VTK 5 installation the libpng library is also installed.
+If you install VTK in other way, please remember to install libpng development
+files (libpng-dev) separately, as they are required for microflow compilation.
+
+
+The following changes to the system will be done:
+
+The following NEW packages will be installed:
+  comerr-dev krb5-multidev libavcodec-dev libavcodec54 libavformat-dev
+  libavformat54 libavutil-dev libavutil52 libcf0 libcr0 libexpat1-dev
+  libfontconfig1-dev libfreetype6-dev libgfortran3 libgl2ps-dev libgl2ps0
+  libgsm1 libgssrpc4 libhdf5-7 libhwloc-dev libhwloc-plugins libhwloc5
+  libibverbs-dev libibverbs1 libjbig-dev libjpeg-dev libjpeg-turbo8-dev
+  libjpeg8-dev libkadm5clnt-mit9 libkadm5srv-mit9 libkdb5-7 liblzma-dev
+  libmp3lame0 libmysqlclient-dev libmysqlclient18 libnetcdf-dev libnetcdfc++4
+  libnetcdfc7 libnetcdff5 libopenjpeg2 libopenmpi-dev libopenmpi1.6 libopus0
+  libpci-dev libpng12-dev libpq-dev libpq5 libqt4-dev libqt4-dev-bin
+  libqt4-opengl-dev libqt4-qt3support libqtwebkit-dev libschroedinger-1.0-0
+  libssl-dev libssl-doc libswscale-dev libswscale2 libtiff5-dev libtiffxx5
+  libtorque2 libva1 libvtk5-dev libvtk5.8 libx264-142 libxft-dev libxml2-dev
+  libxrender-dev libxss-dev libxvidcore4 mpi-default-dev mysql-common
+  openmpi-common qt4-linguist-tools qt4-qmake tcl8.6-dev tk8.6-dev
+  x11proto-render-dev x11proto-scrnsaver-dev zlib1g-dev
+The following packages will be upgraded:
+  libssl1.0.0 libtiff
+
+
+
+A.3 Cmake
+
+
+Cmake is used by microflow build scripts to get information about VTK library.
+
+Cmake is available from Ubuntu repository:
+
+
+sudo apt-get install cmake
+
+
+The following NEW packages will be installed:
+  cmake cmake-data
+
+
+
+A.4 Ruby with development files
+
+
+Ruby is used as a language for case configuration files.
+Installation packages are available from Ubuntu repository:
+
+
+sudo apt-get install ruby ruby-dev
+
+
+The following NEW packages will be installed:
+  libruby1.9.1 libyaml-0-2 ruby ruby-dev ruby1.9.1 ruby1.9.1-dev
+
+
+
+A.5 Ctags
+
+
+Ctags is used for source code annotation.
+Installation package is available from Ubuntu repository:
+
+
+sudo apt-get install ctags
+
+
+The following NEW packages will be installed:
+  exuberant-ctags
+
+
+
+A.6 Boost
+
+
+Boost is a C++ library required to compile CVMLCPP library
+(http://tech.unige.ch/cvmlcpp/).
+Installation packages are available from Ubuntu repository:
+
+
+sudo apt-get install libboost-dev
+
+
+The following NEW packages will be installed:
+  libboost-dev libboost1.54-dev
+
+
+
+A.7 Scons
+
+
+Scons is required to compile CVMLCPP library.
+Installation package is available from Ubuntu repository:
+
+
+sudo apt-get install scons
+
+
+The following NEW packages will be installed:
+  scons
+
+
+
+MORE INFORMATION
+----------------
+
+
+See the microflow web page: http://microflow.pwr.edu.pl
+
+
+

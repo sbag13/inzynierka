@@ -1,0 +1,48 @@
+#!/bin/bash  only for syntax highlight :)
+# WARNING - all comments except in the first line must start with separated '#'
+
+{
+	node_type      = solid
+	color          = (255, 255, 255)
+}
+{
+	node_type      = solid
+	color          = (200, 200, 200)
+}
+
+{
+	node_type      = fluid
+	color          = (0, 0, 0)
+}
+{
+	node_type      = fluid
+	color          = (50, 50, 50)
+}
+
+{
+	node_type      = velocity
+	velocity       = (1, 2, 3)
+	pressure       = 4
+	color          = (1, 1, 1)
+}
+
+{
+	node_type      = velocity_0
+	velocity       = (5, 6, 7)
+	pressure       = 8
+	color          = (2, 2, 2)
+}
+
+{
+	node_type      = bounce_back_2
+	velocity       = (9, 10, 11)
+	pressure       = 12
+	color          = (3, 3, 3)
+}
+
+{
+	node_type      = pressure
+	velocity       = (13, 14, 15)
+	pressure       = 16
+	color          = (4, 4, 4)
+}

@@ -1,0 +1,37 @@
+#!/bin/bash  only for syntax highlight :)
+# WARNING - all comments except in the first line must start with separated '#'
+
+{
+	node_type      = solid
+	color          = (255, 255, 255)
+}
+{
+	node_type      = solid
+	color          = (200, 200, 200)
+}
+
+{
+	node_type      = fluid
+	color          = (0, 0, 0)
+}
+{
+	node_type      = fluid
+	color          = (50, 50, 50)
+}
+
+# inlet
+{
+	node_type      = velocity
+	velocity       = (0.01, 0, 0)
+	pressure       = 0
+	color          = (255, 0, 0)
+}
+
+# outlet
+{
+	node_type      = pressure
+	velocity       = (0, 0, 0)
+	pressure       = 0
+	color          = (230, 230, 0)
+}
+

@@ -1,0 +1,96 @@
+#!/bin/ruby  # only for syntax highlight in vim :)
+
+#
+#	Simulation settings
+#
+
+ collision_model = MRT            ; # MRT BGK
+ fluid_model     = quasi_compressible ; # incompressible quasi_compressible
+ data_type       = double         ; # single double
+ lattice         = D3Q19          ;
+ computational_engine = GPU ;
+
+
+ z_expand_depth  = 40 ;
+
+# Options used during automated surroundig of fluid and during automated node
+# classification.
+# Node definitions consist of obligatory node base type and optional placement 
+# modifier.
+# 
+# All below options accept all node types and placement modifiers.
+# However, I am not sure if it is reasonable to use boundary nodes of 
+# type fluid/solid...
+#
+#	Available node base types:
+#
+#  velocity       
+#  velocity_0     
+#  pressure       
+#  bounce_back_2  
+#  solid          
+#  fluid          
+#
+#	Available node placement modifiers:
+#
+#  north                                 
+#  south                                 
+#  east                                  
+#  west                                  
+#  bottom                                
+#  top                                   
+#
+defaultWallNode                    = velocity_0 ;  
+ 
+defaultExternalCornerNode          = bounce_back_2 ;
+defaultInternalCornerNode          = bounce_back_2 ;
+defaultExternalEdgeNode            = bounce_back_2 ;
+defaultInternalEdgeNode            = bounce_back_2 ;
+defaultNotIdentifiedNode           = bounce_back_2 ;
+defaultExternalEdgePressureNode    = bounce_back_2 ;
+defaultExternalCornerPressureNode  = bounce_back_2 ;
+defaultEdgeToPerpendicularWallNode = bounce_back_2 ;
+
+
+#
+#	Predefined variables:  Nx  Ny  l_n
+#
+
+
+# velocity_residual_error = 1.0e-6 ;
+err = 1.0e-1 ; # Warunek zakonczenia obliczen - blad wzgledny sredniej predkosci dla kolejnych krokow
+
+
+# Parametry obliczen warunkujace stabilnosc symulacji
+#if collision_model == BGK #TODO: multiline expressions
+	tau = 0.6 ; # tau > 0.5, minimalne wartosci (0.525 MRT, 0.58 BGK),
+					  	# wieksza wart. tau zwieksza szybkosc obliczen w jednorodnych 
+							# przestrzeniach, o ile uLB_maks nie przekracza nigdzie 0.2
+					  	# dla zlozonych dziedzin tau=0.6 daje dobre wyniki, 
+							# uLB_maks (0.001 - 0.005)
+#elsif MRT == collision_model
+#	tau = 0.6 ;
+#end
+
+# Parametry fizyczne symulacji
+nu_phys   = 1.0e-6 ; # Fizyczna lepkosc kinematyczna plynu [m^2/s]
+rho0_phys = 1000.0 ; # Gestosc fizyczna plynu [kg/m3]
+
+# Wartosci charakterystyczne
+# LB_characteristic_length
+l_ch_LB = 19 ;
+#l_ch_LB = l_n - 1 ; # Dlugosc charakterystyczna (wysokosc kanalu) LB [Lu] gdy 
+								  # zastosuje sie BB 2 (okalajace) -1
+#l_ch_LB = (l_n)	# Dlugosc charakterystyczna (np. wysokosc kanalu) LB [Lu] gdy 
+									# zastosuje sie war. velocity=0 na scianach +-0
+
+# physical_characteristic_length
+l_ch_phys = 0.001 ; # Fizyczna dlugosc charakterystyczna [m]
+
+# physical_characteristic_velocity
+u_ch_phys = 0.0001    ; # Predkosc charakterystyczna fizyczna [m/s]
+
+
+rho0_LB = 1.0 ; #Poczatkowa gestosc LB (cisnienie)
+ux0_LB = 0 ;
+uy0_LB = 0 ;

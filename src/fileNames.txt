@@ -1,0 +1,8 @@
+.hpp  - header files with declarations only
+.hh   - header files with inline/template implementations in C++ (host code only)
+.tcc  - header files with inline/template implementations in CUDA (device code)
+
+.cpp  - C++ source code for host code
+.cu   - CUDA source code for device code
+.cc   - source code for tests (host and device code)
+

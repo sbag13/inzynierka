@@ -1,0 +1,40 @@
+#!/bin/bash  only for syntax highlight :)
+# WARNING - all comments except in the first line must start with separated '#'
+
+{
+	node_type      = solid
+	color          = (255, 255, 255)
+}
+{
+	# descriptions transformed int solid nodes
+	node_type      = solid
+	# magenta
+	color          = (255, 0, 255)
+}
+{
+	node_type      = solid
+	# blue
+	color          = (0, 0, 255)
+}
+
+{
+	node_type      = fluid
+	color          = (0, 0, 0)
+}
+
+{
+	#  velocity at inlets of channels [m/s]
+	node_type      = velocity
+	velocity       = (0.0001, 0.0, 0.0)	
+	pressure       = 0.0
+	# green
+	color          = (0, 255, 0)
+}
+{
+	node_type      = pressure
+	velocity       = (0.0, 0.0, 0.0)
+	pressure       = 1.0
+	# yellow
+	color          = (255, 250, 0)
+}
+

@@ -1,0 +1,26 @@
+#!/bin/bash  - to jest tylko po to, zeby mi sie w vimie podswietlalo :)
+
+# Odleglosc pomiedzy zapisami plikow vtk
+save_vtk_steps      = 100
+number_vtk_saves    = 1000
+
+numberOfStepsBetweenCheckpointSaves = 10000 
+maxNumberOfCheckpoints = 2
+
+# Wartosc wstawiana do wezlow BB 
+vtkDefaultRhoForBB2Nodes = mean  # mean nan
+
+
+# Options to disable saving data to vtk output files
+# true yes  false no 
+vtk_save_velocity_LB         = true  # Wartosci ux i uy LB
+vtk_save_velocity_physical   = false # Wartosci ux i uy fizyczne
+vtk_save_rho_LB              = true # RHO LB
+vtk_save_pressure_physical   = false # Cisnienie fizyczne
+vtk_save_nodes               = true # wezly
+vtk_save_mass_flow_fractions = false # Fx
+
+
+# Odleglosc pomiedzy wyswietlaniem komunikatow o bledach
+error_print_steps   = 100
+

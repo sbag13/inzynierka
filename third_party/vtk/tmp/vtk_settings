@@ -1,0 +1,2 @@
+VTK_INCLUDES = -I/usr/local/include/vtk-5.10
+VTK_LIBRARY_PATH = -L/usr/lib
