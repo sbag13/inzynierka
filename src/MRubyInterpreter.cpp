@@ -1,12 +1,14 @@
 #include "MRubyInterpreter.hpp"
 #include "Exceptions.hpp"
 
+#include <tuple>
+#include <type_traits>
+
 #include <mruby/string.h>
 #include <mruby/numeric.h>
+#include <mruby/array.h>
 
 using namespace std ;
-
-int fn1 (){return 1;};
 
 namespace microflow
 {
@@ -152,33 +154,257 @@ namespace microflow
     static NodeLayout * nodeLayoutPtr = NULL ;
     static ModificationRhoU * modificationsRhoUPtr = NULL ;
 
-    static mrb_value setNodeBaseType (mrb_state * state, mrb_value self)  //mrb_value x, mrb_value y, mrb_value z, mrb_value baseType
+    static mrb_value setNodeBaseType (mrb_state * state, mrb_value self) 
     {
         //if (mrb_get_argc == 4) //TO_DO
 
-        mrb_value mrb_nodeX ;
-        mrb_value mrb_nodeY ;
-        mrb_value mrb_nodeZ ;
+        mrb_int mrb_nodeZ ;
+        mrb_int mrb_nodeX ;
+        mrb_int mrb_nodeY ;
         mrb_value mrb_nodeBaseTypeName ;
 
         mrb_get_args (state, "iiiz", &mrb_nodeX, &mrb_nodeY, &mrb_nodeZ, &mrb_nodeBaseTypeName) ;
 
-        unsigned nodeX = convertTo<unsigned> (mrb_nodeX) ;
-        unsigned nodeY = convertTo<unsigned> (mrb_nodeY) ;
-        unsigned nodeZ = convertTo<unsigned> (mrb_nodeZ) ;
+        unsigned nodeX = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeX)) ;
+        unsigned nodeY = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeY)) ;
+        unsigned nodeZ = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeZ)) ;
         string nodeBaseTypeName = convertTo<string> (mrb_nodeBaseTypeName) ;
+
+        auto node = nodeLayoutPtr->getNodeType (nodeX,nodeY,nodeZ) ;
+	    node.setBaseType (fromString<NodeBaseType> (nodeBaseTypeName)) ;
+	    nodeLayoutPtr->setNodeType (nodeX, nodeY, nodeZ, node) ;
+        return mrb_nil_value () ;
+    }
+
+    static mrb_value setNodePlacementModifier (mrb_state * state, mrb_value self)
+    {
+        //if (mrb_get_argc == 4) //TO_DO
+
+        mrb_int mrb_nodeX ;           //to wczytywanie argumentów mozna wywalic do funkcji
+        mrb_int mrb_nodeY ;
+        mrb_int mrb_nodeZ ;
+        mrb_value mrb_placementModifierName ;
+
+        mrb_get_args (state, "iiiS", &mrb_nodeX, &mrb_nodeY, &mrb_nodeZ, &mrb_placementModifierName) ;
+
+        unsigned nodeX = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeX)) ;
+        unsigned nodeY = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeY)) ;
+        unsigned nodeZ = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeZ)) ;
+        string placementModifierName = convertTo<string> (mrb_placementModifierName) ;
+
+        auto node = nodeLayoutPtr->getNodeType (nodeX,nodeY,nodeZ) ;
+	    node.setPlacementModifier (fromString<PlacementModifier> (placementModifierName)) ;
+	    nodeLayoutPtr->setNodeType (nodeX,nodeY,nodeZ, node) ;
+
+	    return mrb_nil_value () ;
+    }
+
+    static mrb_value setNodeRhoPhysical (mrb_state * state, mrb_value self) 
+    {
+        mrb_int mrb_nodeX ;           //to wczytywanie argumentów mozna wywalic do funkcji
+        mrb_int mrb_nodeY ;
+        mrb_int mrb_nodeZ ;
+        mrb_float mrb_rhoPhysical;
+
+        mrb_get_args (state, "iiif", &mrb_nodeX, &mrb_nodeY, &mrb_nodeZ, &mrb_rhoPhysical) ;
+
+        unsigned nodeX = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeX)) ;
+        unsigned nodeY = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeY)) ;
+        unsigned nodeZ = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeZ)) ;
+        double rhoPhysical = convertTo<double> (mrb_float_value (state, mrb_rhoPhysical)) ;
+        
+        modificationsRhoUPtr->addRhoPhysical (Coordinates (nodeX, nodeY, nodeZ), rhoPhysical) ;
+
+        return mrb_nil_value () ;
+    }
+
+    static mrb_value setNodeRhoBoundaryPhysical (mrb_state * state, mrb_value self) 
+    {
+        mrb_int mrb_nodeX ;           //to wczytywanie argumentów mozna wywalic do funkcji
+        mrb_int mrb_nodeY ;
+        mrb_int mrb_nodeZ ;
+        mrb_float mrb_rhoPhysical;
+
+        mrb_get_args (state, "iiif", &mrb_nodeX, &mrb_nodeY, &mrb_nodeZ, &mrb_rhoPhysical) ;
+
+
+        unsigned nodeX = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeX)) ;
+        unsigned nodeY = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeY)) ;
+        unsigned nodeZ = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeZ)) ;
+        double rhoPhysical = convertTo<double> (mrb_float_value (state, mrb_rhoPhysical)) ;
+
+        modificationsRhoUPtr->addRhoBoundaryPhysical (Coordinates (nodeX, nodeY, nodeZ), rhoPhysical) ;
+
+        return mrb_nil_value () ;
+    }
+
+    static mrb_value setNodeUPhysical (mrb_state * state, mrb_value self) 
+    {
+        mrb_int mrb_nodeX ;           //to wczytywanie argumentów mozna wywalic do funkcji
+        mrb_int mrb_nodeY ;
+        mrb_int mrb_nodeZ ;
+        mrb_value mrb_uPhysical;
+
+        mrb_get_args (state, "iiif", &mrb_nodeX, &mrb_nodeY, &mrb_nodeZ, &mrb_uPhysical) ;
+
+        unsigned nodeX = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeX)) ;
+        unsigned nodeY = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeY)) ;
+        unsigned nodeZ = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeZ)) ;
+        double ux = convertTo<double> (mrb_ary_entry (mrb_uPhysical, 0)) ;
+	    double uy = convertTo<double> (mrb_ary_entry (mrb_uPhysical, 1)) ;
+	    double uz = convertTo<double> (mrb_ary_entry (mrb_uPhysical, 2)) ;
+
+        modificationsRhoUPtr->addUPhysical (Coordinates (nodeX, nodeY, nodeZ), ux,uy,uz) ;
+
+        return mrb_nil_value () ;
+    }
+
+    static mrb_value setNodeUBoundaryPhysical (mrb_state * state, mrb_value self) 
+    {
+        mrb_int mrb_nodeX ;           //to wczytywanie argumentów mozna wywalic do funkcji
+        mrb_int mrb_nodeY ;
+        mrb_int mrb_nodeZ ;
+        mrb_value mrb_uPhysical;
+
+        mrb_get_args (state, "iiif", &mrb_nodeX, &mrb_nodeY, &mrb_nodeZ, &mrb_uPhysical) ;
+
+        unsigned nodeX = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeX)) ;
+        unsigned nodeY = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeY)) ;
+        unsigned nodeZ = convertTo<unsigned> (mrb_fixnum_value (mrb_nodeZ)) ;
+        double ux = convertTo<double> (mrb_ary_entry (mrb_uPhysical, 0)) ;
+	    double uy = convertTo<double> (mrb_ary_entry (mrb_uPhysical, 1)) ;
+	    double uz = convertTo<double> (mrb_ary_entry (mrb_uPhysical, 2)) ;
+
+        modificationsRhoUPtr->addUBoundaryPhysical (Coordinates (nodeX, nodeY, nodeZ), ux,uy,uz) ;
+
+        return mrb_nil_value () ;
+    }
+
+    mrb_value createMRubyObject (mrb_state* mrb, const std::string& className)
+    {
+        struct RClass *mrb_class ;
+        mrb_value mrb_object ;
+        mrb_class = mrb_define_class(mrb, className.c_str (), mrb->object_class) ;
+        mrb_object = mrb_obj_new (mrb, mrb_class, 0, NULL) ;
+
+        return mrb_object ;
+    }
+
+    mrb_sym mrb_symbol_from (const std::string& symbol)     //jesli jest singleton
+    {
+        mrb_state* state = MRubyInterpreter::getMRubyInterpreter () -> getState () ;
+        return mrb_intern_str (state, mrb_str_new_cstr (state, "@width")) ;
+    }
+
+    //TEST mozna zrobic evaluation ...
+
+    static mrb_value getNode (mrb_state * state, mrb_value self) 
+    {
+        mrb_int mrb_X ;           //to wczytywanie argumentów mozna wywalic do funkcji
+        mrb_int mrb_Y ;
+        mrb_int mrb_Z ;
+
+        mrb_get_args (state, "iiif", &mrb_X, &mrb_Y, &mrb_Z) ;
+
+        unsigned x = convertTo<unsigned> (mrb_fixnum_value (mrb_X)) ;
+        unsigned y = convertTo<unsigned> (mrb_fixnum_value (mrb_Y)) ;
+        unsigned z = convertTo<unsigned> (mrb_fixnum_value (mrb_Z)) ;
+
+        mrb_value node = createMRubyObject (state, "Node") ;
+
+        NodeType nodeType ;
+        Coordinates coordinates (x, y, z) ;
+
+        Size size = nodeLayoutPtr->getSize () ;
+        if (size.areCoordinatesInLimits (coordinates))
+        {
+            nodeType = nodeLayoutPtr->getNodeType (coordinates) ;
+        }
+        else
+        {
+            logger << "WARNING: Can not get node type at " << coordinates 
+					 << ", coordinates outside of " << size << "\n" ;
+		    return mrb_nil_value () ;
+        }
+
+        std::string baseTypeName = toString (nodeType.getBaseType()) ;
+        std::string placementModifierName = toString (nodeType.getPlacementModifier()) ;
+
+        // mrb_sym mrb_symbol_baseType = mrb_intern_str (state, mrb_str_new_cstr (state, "@baseType")) ;
+        // mrb_sym mrb_symbol_placementModifier = mrb_intern_str (state, mrb_str_new_cstr (state, "@placementModifier")) ;
+
+        // mrb_iv_set(state, node, mrb_symbol_baseType, mrb_str_new_cstr (state, baseTypeName.c_str())) ;
+        // mrb_iv_set(state, node, mrb_symbol_placementModifier, mrb_str_new_cstr (state, placementModifierName.c_str())) ;
+
+        mrb_iv_set(state, node, mrb_symbol_from ("@baseType"), mrb_str_new_cstr (state, baseTypeName.c_str())) ;        //mrb_str_new_cstr jak singleton -> funkcja
+        mrb_iv_set(state, node, mrb_symbol_from ("@placementModifier"), mrb_str_new_cstr (state, placementModifierName.c_str())) ;
+
+        return node ;
+    }
+
+    static mrb_value getSize (mrb_state * state, mrb_value self) 
+    {
+        mrb_value size = createMRubyObject (state, "Size") ;
+
+        Size nodeLayoutSize = nodeLayoutPtr->getSize () ;
+
+        // mrb_sym mrb_symbol_width = mrb_intern_str (state, mrb_str_new_cstr (state, "@width")) ;
+        // mrb_sym mrb_symbol_height = mrb_intern_str (state, mrb_str_new_cstr (state, "@height")) ;
+        // mrb_sym mrb_symbol_depth = mrb_intern_str (state, mrb_str_new_cstr (state, "@depth")) ;
+
+        // mrb_iv_set (state, size, mrb_symbol_width, mrb_fixnum_value (nodeLayoutSize.getWidth ())) ;
+        // mrb_iv_set (state, size, mrb_symbol_height, mrb_fixnum_value (nodeLayoutSize.getHeight ())) ;
+        // mrb_iv_set (state, size, mrb_symbol_depth, mrb_fixnum_value (nodeLayoutSize.getDepth ())) ;
+
+        mrb_iv_set (state, size, mrb_symbol_from ("@width"), mrb_fixnum_value (nodeLayoutSize.getWidth ())) ;
+        mrb_iv_set (state, size, mrb_symbol_from ("@height"), mrb_fixnum_value (nodeLayoutSize.getHeight ())) ;
+        mrb_iv_set (state, size, mrb_symbol_from ("@depth"), mrb_fixnum_value (nodeLayoutSize.getDepth ())) ;
+
+        return size ;
     }
 
     static void
     initializeRubyModifyLayout()
     {
+        mrb_state* state = MRubyInterpreter::getMRubyInterpreter () -> getState () ;
 
+        mrb_define_method (state, state->kernel_module, "setNodeBaseType", setNodeBaseType, MRB_ARGS_REQ(4)) ;
+        mrb_define_method (state, state->kernel_module, "setNodePlacementModifier", setNodePlacementModifier, MRB_ARGS_REQ(4)) ;
+        mrb_define_method (state, state->kernel_module, "setNodeRhoPhysical", setNodeRhoPhysical, MRB_ARGS_REQ(4)) ;
+        mrb_define_method (state, state->kernel_module, "setNodeRhoBoundaryPhysical", setNodeRhoBoundaryPhysical, MRB_ARGS_REQ(4)) ;
+        mrb_define_method (state, state->kernel_module, "setNodeUPhysical", setNodeUPhysical, MRB_ARGS_REQ(4)) ;
+        mrb_define_method (state, state->kernel_module, "setNodeUBoundaryPhysical", setNodeUBoundaryPhysical, MRB_ARGS_REQ(4)) ;
+        mrb_define_method (state, state->kernel_module, "getNode", getNode, MRB_ARGS_REQ(3)) ;
+        mrb_define_method (state, state->kernel_module, "getSize", getSize, MRB_ARGS_NONE()) ;
+
+
+        //mrb_define_method (state, state->kernel_module, "testFN", testFN, MRB_ARGS_REQ(1)) ;
     }
 
     ModificationRhoU MRubyInterpreter::
     modifyNodeLayout (NodeLayout & nodeLayout, const std::string & rubyCode)
     {
         initializeRubyModifyLayout() ;
+
+        	nodeLayoutPtr = &nodeLayout ;
+	        ModificationRhoU modifications ;
+	        modificationsRhoUPtr = &modifications ;
+
+            //TODO: Use xxd.
+            #define STRINGIFY(x) #x
+            const char * script = //TODO: should I move it to RubyScripts.hpp ?
+                    #include "modifyNodeLayout.rb"
+                    ;
+            #undef STRINGIFY
+
+            std::string code = script + rubyCode ;
+
+            runScript (code.c_str()) ;
+
+            nodeLayoutPtr = NULL ;
+            modificationsRhoUPtr = NULL ;
+
+            return modifications ;
     }
 
     void MRubyInterpreter::
@@ -189,7 +415,7 @@ namespace microflow
         if (!state_) 
         {
             //handle error
-        }
+        }//vs code does not see header file in the same
     }
 
     void MRubyInterpreter::
@@ -204,15 +430,21 @@ namespace microflow
         return this->value_ ;
     }
 
+    mrb_state* MRubyInterpreter::
+    getState ()
+    {
+        return this->state_ ;
+    }
+
     void test ()
     {
         ifstream str("script.rb");
         string code((istreambuf_iterator<char>(str)), istreambuf_iterator<char>());
 
         MRubyInterpreter* ptr = MRubyInterpreter::getMRubyInterpreter() ;
+        
+        initializeRubyModifyLayout () ;
         ptr->runScript (code) ;
-        string a = ptr->getMRubyVariable<string> ("$var") ;
-        cout << a ;
     }
 }
 

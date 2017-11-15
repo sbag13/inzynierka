@@ -12,6 +12,8 @@
 #include "NodeLayout.hpp"
 #include "ModificationRhoU.hpp"
 
+#include "NodeBaseType.hpp" 
+
 namespace microflow
 {
     class MRubyInterpreter
@@ -28,6 +30,7 @@ namespace microflow
         ModificationRhoU modifyNodeLayout (NodeLayout & nodeLayout, const std::string & rubyCode) ;
 
         const mrb_value getValue () const ; // tylko do testów, nie musi być publiczne
+        mrb_state* getState () ;
 
     private:
         MRubyInterpreter () ; 

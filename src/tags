@@ -1307,7 +1307,6 @@ findMaxDuration	PerformanceMeter.cpp	/^findMaxDuration()$/;"	f	class:microflow::
 findMinDuration	PerformanceMeter.cpp	/^findMinDuration()$/;"	f	class:microflow::PerformanceMeter
 fluidModelName_	Settings.hpp	/^		std::string fluidModelName_          ;$/;"	m	class:microflow::Settings
 flush_buffer	gzstream.cpp	/^int gzstreambuf::flush_buffer() {$/;"	f	class:GZSTREAM_NAMESPACE::gzstreambuf
-fn1	MRubyInterpreter.cpp	/^int fn1 (){return 1;};$/;"	f
 forEachNode	TiledLattice.hh	/^forEachNode (Functor functor)$/;"	f	class:microflow::TILED_LATTICE
 forEachNode	WriterVtk.hh	/^forEachNode (TiledLattice const & tiledLattice, Functor functor)$/;"	f	class:microflow::WriterVtkBase
 forEachTile	TiledLattice.hh	/^forEachTile (Functor functor)$/;"	f	class:microflow::TILED_LATTICE
@@ -1537,6 +1536,7 @@ getSolidNeighborMask	ExpandedNodeLayout.hh	/^getSolidNeighborMask( unsigned x, u
 getSolidNeighborMasks	TiledLattice.tcc	/^getSolidNeighborMasks()$/;"	f	class:microflow::TILED_LATTICE_GPU
 getSolidNeighborMasksPointer	TiledLattice.hpp	/^		SolidNeighborMask * getSolidNeighborMasksPointer() { return & solidNeighborMasks_[0] ; }$/;"	f	class:microflow::TiledLattice
 getSolidNeighborMasksPointer	TiledLattice.hpp	/^		SolidNeighborMask * getSolidNeighborMasksPointer() { return solidNeighborMasks_.getPointer() ; }$/;"	f	class:microflow::TiledLattice
+getState	MRubyInterpreter.cpp	/^    getState ()$/;"	f	class:microflow::MRubyInterpreter
 getTau	Settings.hh	/^getTau() const$/;"	f	class:microflow::Settings
 getTile	TileLayout.hh	/^getTile( Coordinates nodeCoordinates ) const$/;"	f	class:microflow::TileLayoutBase
 getTile	TileLayout.hh	/^getTile( TileLayoutBase<Storage>::ConstIterator it ) const$/;"	f	class:microflow::TileLayoutBase
@@ -2145,6 +2145,7 @@ microflow::MRubyInterpreter::closeMRubyInterpreter	MRubyInterpreter.cpp	/^    cl
 microflow::MRubyInterpreter::context_	MRubyInterpreter.hpp	/^        mrbc_context * context_ ;$/;"	m	class:microflow::MRubyInterpreter
 microflow::MRubyInterpreter::getMRubyInterpreter	MRubyInterpreter.cpp	/^    getMRubyInterpreter ()$/;"	f	class:microflow::MRubyInterpreter
 microflow::MRubyInterpreter::getMRubyVariable	MRubyInterpreter.cpp	/^    getMRubyVariable( const std::string & variableName )$/;"	f	class:microflow::MRubyInterpreter
+microflow::MRubyInterpreter::getState	MRubyInterpreter.cpp	/^    getState ()$/;"	f	class:microflow::MRubyInterpreter
 microflow::MRubyInterpreter::getValue	MRubyInterpreter.cpp	/^    getValue () const$/;"	f	class:microflow::MRubyInterpreter
 microflow::MRubyInterpreter::initializeMRubyInterpreter	MRubyInterpreter.cpp	/^    initializeMRubyInterpreter()$/;"	f	class:microflow::MRubyInterpreter
 microflow::MRubyInterpreter::modifyNodeLayout	MRubyInterpreter.cpp	/^    modifyNodeLayout (NodeLayout & nodeLayout, const std::string & rubyCode)$/;"	f	class:microflow::MRubyInterpreter
@@ -3233,6 +3234,7 @@ microflow::rsDirections	Direction.hpp	/^Direction::D constexpr rsDirections[] = 
 microflow::rubyException	RubyInterpreter.cpp	/^} rubyException ;$/;"	m	namespace:microflow	typeref:class:microflow::RubyException	file:
 microflow::setNodeBaseType	MRubyInterpreter.cpp	/^    static mrb_value setNodeBaseType (mrb_state * state, mrb_value self)  \/\/mrb_value x, mrb_value y, mrb_value z, mrb_value baseType$/;"	f	namespace:microflow
 microflow::setNodeBaseType	RubyInterpreter.cpp	/^static VALUE setNodeBaseType (VALUE self, VALUE x, VALUE y, VALUE z, VALUE baseType)$/;"	f	namespace:microflow
+microflow::setNodePlacementModifier	MRubyInterpreter.cpp	/^    static mrb_value setNodePlacementModifier (mrb_state * state, mrb_value self)$/;"	f	namespace:microflow
 microflow::setNodePlacementModifier	RubyInterpreter.cpp	/^static VALUE setNodePlacementModifier (VALUE self, VALUE x, VALUE y, VALUE z, $/;"	f	namespace:microflow
 microflow::setNodeRhoBoundaryPhysical	RubyInterpreter.cpp	/^static VALUE setNodeRhoBoundaryPhysical (VALUE self, VALUE x, VALUE y, VALUE z, $/;"	f	namespace:microflow
 microflow::setNodeRhoPhysical	RubyInterpreter.cpp	/^static VALUE setNodeRhoPhysical (VALUE self, VALUE x, VALUE y, VALUE z, $/;"	f	namespace:microflow
@@ -3489,6 +3491,7 @@ setKinematicViscosityPhysical	Settings.hh	/^setKinematicViscosityPhysical( doubl
 setNTotalTiles	TilingStatistic.cpp	/^setNTotalTiles( size_t nTotalTiles )$/;"	f	class:microflow::TilingStatistic
 setNodeBaseType	MRubyInterpreter.cpp	/^    static mrb_value setNodeBaseType (mrb_state * state, mrb_value self)  \/\/mrb_value x, mrb_value y, mrb_value z, mrb_value baseType$/;"	f	namespace:microflow
 setNodeBaseType	RubyInterpreter.cpp	/^static VALUE setNodeBaseType (VALUE self, VALUE x, VALUE y, VALUE z, VALUE baseType)$/;"	f	namespace:microflow
+setNodePlacementModifier	MRubyInterpreter.cpp	/^    static mrb_value setNodePlacementModifier (mrb_state * state, mrb_value self)$/;"	f	namespace:microflow
 setNodePlacementModifier	RubyInterpreter.cpp	/^static VALUE setNodePlacementModifier (VALUE self, VALUE x, VALUE y, VALUE z, $/;"	f	namespace:microflow
 setNodeRhoBoundaryPhysical	RubyInterpreter.cpp	/^static VALUE setNodeRhoBoundaryPhysical (VALUE self, VALUE x, VALUE y, VALUE z, $/;"	f	namespace:microflow
 setNodeRhoPhysical	RubyInterpreter.cpp	/^static VALUE setNodeRhoPhysical (VALUE self, VALUE x, VALUE y, VALUE z, $/;"	f	namespace:microflow
